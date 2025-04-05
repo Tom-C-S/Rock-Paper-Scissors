@@ -1,0 +1,141 @@
+import csv
+import time
+import random
+import math
+from time import sleep
+
+    
+leaderboardfile = open("leaderboard.csv", "a")
+
+
+wins = 0
+losses = 0
+draws = 0
+
+Computer_Rock = 0
+Computer_Paper = 0
+Computer_Scissors = 0
+
+Number_Of_Games = 0    
+CR_Overall = 0
+CP_Overall = 0
+CS_Overall = 0
+
+while True:
+    
+    user_choice = input ("\nEnter a choice: rock, paper or scissors... ")
+    sleep(1)
+    
+
+    
+    Possible_choice = ["rock", "paper", "scissors"]
+    Computer_choice = random.choice(Possible_choice)
+
+    print(f"\nYou Chose {user_choice}, computer chose {Computer_choice}.\n")
+    sleep(1)
+
+    if user_choice == Computer_choice:
+        print("You have drawn")
+        draws += 1 
+       
+
+    elif user_choice == "rock":
+        if Computer_choice == "scissors":
+            print("You win")
+            wins += 1
+        else:
+            print("You lost")
+            losses += 1
+        
+
+    elif user_choice == "paper":
+        if Computer_choice == "rock":
+            print("You win")
+            wins += 1
+        else:
+            print("You lost")
+            losses += 1
+        
+
+        
+    elif user_choice == "scissors":
+        if Computer_choice == "paper":
+            print("You win")
+            wins += 1
+        else:
+            print("You lost")
+            losses += 1
+
+    if Computer_choice == "rock":
+        Computer_Rock += 1
+
+    elif Computer_choice == "paper":
+        Computer_Paper += 1
+
+    elif Computer_choice == "scissors":
+        Computer_Scissors +=1
+    
+    sleep(1)
+    play_again = input ("Would you like to play again? yes or no?  ")
+    sleep(1)
+    if play_again.lower() != "yes":
+        break
+
+
+sleep(1)
+print("Here are your final scores")
+sleep(2)
+print("  ")
+
+print(f"Wins: {wins}, Draws: {draws}, Lost {losses}")
+
+
+leaderboardfile.write(f"{wins},{draws},{losses}\n")
+leaderboardfile.close()
+
+
+sleep(1)
+with open("leaderboard.csv", "r") as f:
+    RPS_Data = csv.reader(f)
+
+    Win_Overall = 0
+    Draw_Overall = 0
+    Losses_Overall = 0
+    for line in RPS_Data:
+        if line:
+            try:
+                Win_Overall += int(line[0])
+                Draw_Overall += int(line[1])
+                Losses_Overall += int(line[2])
+            except ValueError:
+                print("Skip Line Error")
+                continue
+    sleep(1)
+    Score_Choice = input("Would you like to see your total device score? ")
+    if Score_Choice.lower() == "yes":
+        sleep(1)
+        print(f"\nDevice Scores: \nWins: {Win_Overall}, Draws: {Draw_Overall}, Losses: {Losses_Overall}")
+        
+     
+with open("ComputerRPS_Choice.csv", "a") as CPchoice_Data:
+    CPchoice_Data.write(f"{Computer_Rock},{Computer_Paper},{Computer_Scissors}\n")
+
+
+with open("ComputerRPS_Choice.csv", "r") as Cfile:
+    CPchoice_Data = csv.reader(Cfile)
+    
+    for line in CPchoice_Data:
+        if line:
+            try:
+                CR_Overall += int(line[0])
+                CP_Overall += int(line[1])
+                CS_Overall += int(line[2])
+                Number_Of_Games = (CR_Overall + CP_Overall + CS_Overall)
+            except ValueError:
+                print("Skip Line Error")
+                continue
+    sleep(1)
+    CP_Choice = input("Would you like to see a hint for the next game? ")
+    if CP_Choice.lower() == "yes":
+        sleep(1)
+        print(f"\nFrom the previous games the computer chose\nRock: {round(CR_Overall / Number_Of_Games * 100, 2)}%,\nPaper: {round(CP_Overall / Number_Of_Games * 100, 2)}%,\nScissors: {round(CS_Overall / Number_Of_Games * 100, 2)}%")
